@@ -1,12 +1,16 @@
 require('dotenv').config()
+
+
 const port = process.env.APP_PORT
+global.__basedir = __dirname
+global.baseUrl = `http://localhost:${port}/`
 
 const express   = require('express')
 const cors      = require('cors')
 const app       = express()
 
 var corsOptions = {
-    origin: `http://localhost/${port}`
+    origin: baseUrl
 }
 
 app.use(express.json())
@@ -16,6 +20,8 @@ app.use(cors(corsOptions))
 const db = require('./app/models')
 const Role = db.role
 const User = db.user
+
+
 
 var bcrypt = require("bcryptjs")
 db.sequelize.sync({force: process.env.IS_RESYNC}).then(() => {
@@ -73,6 +79,7 @@ app.get("/", (req, res) => {
 })
 require('./app/routes/auth.routes')(app)
 require('./app/routes/user.routes')(app)
+require('./app/routes/upload.routes')(app)
 app.listen(port, () => {
     console.log(`Server running on port ${port}.`)
 })
