@@ -33,6 +33,15 @@ To run this project, you will need to add the following environment variables to
 
 `IS_RESYNC` with `true` or `false` as value
 
+OR
+
+Use this command following command :
+```
+ cp .env.example .env
+```
+env.example .env
+```
+
 
 ## Run Locally
 
