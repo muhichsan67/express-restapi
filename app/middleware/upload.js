@@ -4,17 +4,18 @@ const maxSize = 2 * 1024 * 1024
 
 require('dotenv').config()
 const uploadDir = process.env.UPLOAD_DIR
+const path = require("path")
 
-let directory = multer.diskStorage({
-    destination: (req, file, cb) => {
-        cb(null, __basedir + uploadDir)
+let storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+      cb(null, path.join(__basedir, "resources/upload"))
     },
-    filename: (req, file, cb) => {
-        cb(null, file.originalname)
+    filename: function (req, file, cb) {
+      const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9)
+      cb(null, file.fieldname + '-' + uniqueSuffix + '-' + file.originalname)
     }
-})
+  })
 
-let uploadFile = multer({storage: directory, limits: {fileSize: maxSize}}).single('file')
+let uploadFileMiddleware = multer({storage: storage, limits: {fileSize: maxSize}}).single('file')
 
-let uploadFileMiddleware = util.promisify(uploadFile)
 module.exports = uploadFileMiddleware

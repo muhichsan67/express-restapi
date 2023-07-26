@@ -1,15 +1,37 @@
-const uploadFile = require("../middleware/upload")
+const uploadFileMiddleware = require("../middleware/upload")
 const fs = require('fs')
 require('dotenv').config()
 const uploadDir = process.env.UPLOAD_DIR
 
-const upload = async (req, res) => {
+// const upload = async (req, res) => {
+//     try {
+//         console.log(req.body)
+//         console.log(req.file)
+//         if (req.file == undefined) {
+//             return res.status(400).send({message: "Please upload a file!"})
+//         }
+//         // await uploadFileMiddleware(req, res)
+
+//         res.status(200).send({message: "Upload file success!"})
+//     } catch (err) {
+//         console.log("ERR", req.file)
+//         if (err.code == "LIMIT_FILE_SIZE") {
+//             return res.status(500).send({
+//                 message: "File size cannot be larger than 2MB!",
+//             })
+//         }
+//         res.status(500).send({
+//             message: `Could not upload the file: ${err}`,
+//         })
+//     }
+// }
+
+const upload = (req, res) => {
     try {
         console.log(req.file)
         if (req.file == undefined) {
             return res.status(400).send({message: "Please upload a file!"})
         }
-        await uploadFile(req, res)
 
         res.status(200).send({message: "Upload file success!"})
     } catch (err) {
