@@ -9,9 +9,38 @@ const express   = require('express')
 const cors      = require('cors')
 const app       = express()
 
+const swaggerUi = require('swagger-ui-express');
+const swaggerJsdoc = require('swagger-jsdoc');
+
+// Swagger setup
+const swaggerOptions = {
+    definition: {
+        openapi: '3.0.0',
+        info: {
+        title: 'My API',
+        version: '1.0.0',
+        description: 'A simple Express API with Swagger',
+        },
+        servers: [
+        {
+            url: global.baseUrl,
+        },
+        ],
+    },
+    apis: ['./app/routes/*.js'], // arahkan ke file yang berisi dokumentasi API-mu
+};
+
+
+
 var corsOptions = {
     origin: baseUrl
 }
+
+const swaggerSpec = swaggerJsdoc(swaggerOptions);
+console.log('SWAGGER ', swaggerSpec.paths);
+
+// Endpoint untuk Swagger UI
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 app.use(express.json())
 app.use(express.urlencoded({extended: true}))
@@ -77,8 +106,12 @@ function initial() {
 app.get("/", (req, res) => {
     res.json({message: "Welcome to RESTful API Express JWT MySQL"})
 })
+
+// server.js
+const userRoutes = require('./app/routes/user.routes');
+app.use('/api/test', userRoutes); // Ini baru bisa jalan kalau pakai router
+
 require('./app/routes/auth.routes')(app)
-require('./app/routes/user.routes')(app)
 require('./app/routes/upload.routes')(app)
 app.listen(port, () => {
     console.log(`Server running on port ${port}.`)
