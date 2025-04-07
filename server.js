@@ -53,10 +53,12 @@ const User = db.user
 
 
 var bcrypt = require("bcryptjs")
-db.sequelize.sync({force: process.env.IS_RESYNC}).then(() => {
-    // console.log('Drop and Resync DB')
-    if (process.env.IS_RESYNC) initial()
-})
+if (process.env.IS_RESYNC) {
+    db.sequelize.sync({force: false}).then(() => {
+        // console.log('Drop and Resync DB')
+        if (process.env.IS_RESYNC) initial()
+    })
+}
 
 function initial() {
     Role.create({
