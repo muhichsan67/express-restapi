@@ -52,6 +52,7 @@ verifyToken = (req, res, next) => {
             }
 
             req.userId = decoded.id
+            console.log('REQ PARAMETER', req)
             next()
         })
     } catch (err) {

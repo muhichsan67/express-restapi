@@ -54,7 +54,7 @@ const User = db.user
 
 var bcrypt = require("bcryptjs")
 if (process.env.IS_RESYNC) {
-    db.sequelize.sync({force: false}).then(() => {
+    db.sequelize.sync({force: true}).then(() => {
         // console.log('Drop and Resync DB')
         if (process.env.IS_RESYNC) initial()
     })
