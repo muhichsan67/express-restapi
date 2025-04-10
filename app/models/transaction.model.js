@@ -7,6 +7,9 @@ module.exports = (sequelize, Sequelize) => {
         transaction_date: {
             type: Sequelize.DATEONLY,
         },
+        transaction_code: {
+            type: Sequelize.STRING,
+        },
         type: {
             type: Sequelize.STRING(1),
         },

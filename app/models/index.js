@@ -22,20 +22,31 @@ db.transaction = require('./transaction.model.js')(sequelize, Sequelize)
 db.transactionType = require('./transaction_type.model.js')(sequelize, Sequelize)
 
 db.role.hasMany(db.user, {
-    foreignKey: 'role_id',
-    as: 'user'
+    foreignKey: 'code',
+    as: 'user',
+    targetKey: 'role_code'
 })
 db.user.belongsTo(db.role, {
-    foreignKey: 'role_id',
-    as: 'role'
+    foreignKey: 'role_code',
+    as: 'role',
+    targetKey: 'code'
 })
 
 db.user.hasMany(db.transaction, {
     foreignKey: 'user_id',
     as: 'transaction'
 })
-db.transaction.belongsTo(db.transactionType, {
+db.transaction.belongsTo(db.user, {
+    foreignKey: 'user_id',
+    as: 'user'
+})
+
+db.transactionType.hasMany(db.transaction, {
     foreignKey: 'transaction_code',
+    as: 'transaction'
+})
+db.transaction.belongsTo(db.transactionType, {
+    foreignKey: 'trans_code',
     as: 'code'
 })
 

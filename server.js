@@ -49,6 +49,7 @@ app.use(cors(corsOptions))
 const db = require('./app/models')
 const Role = db.role
 const User = db.user
+const TransactionType = db.transactionType
 
 
 
@@ -56,44 +57,27 @@ var bcrypt = require("bcryptjs")
 if (process.env.IS_RESYNC) {
     db.sequelize.sync({force: true}).then(() => {
         // console.log('Drop and Resync DB')
-        if (process.env.IS_RESYNC) initial()
+        insertMasterData()
+        initial()
+    })
+} else {
+    db.sequelize.sync({alter: true}).then(() => {
+        console.log('Drop and Resync DB')
+        insertMasterData()
     })
 }
 
 function initial() {
     Role.create({
-        id: 1,
-        name: "user"
+        code: "admin",
+        name: "Administrator"
     })
 
     Role.create({
-        id: 2,
-        name: "moderator"
+        code: "user",
+        name: "Pengguna"
     })
 
-    Role.create({
-        id: 3,
-        name: "admin"
-    })
-
-    User.create({
-        username: 'user123',
-        password: bcrypt.hashSync('123456', 8),
-        name: 'User 1',
-        email: 'user1@gmail.com',
-        phone_number: 62831231221,
-        join_date: new Date(),
-        role_id: 1
-    })
-    User.create({
-        username: 'mod123',
-        password: bcrypt.hashSync('123456', 8),
-        name: 'Moderator 1',
-        email: 'mod1@gmail.com',
-        phone_number: 62831231331,
-        join_date: new Date(),
-        role_id: 2
-    })
     User.create({
         username: 'admin123',
         password: bcrypt.hashSync('123456', 8),
@@ -101,7 +85,54 @@ function initial() {
         email: 'admin1@gmail.com',
         phone_number: 62831231999,
         join_date: new Date(),
-        role_id: 3
+        role_code: "admin"
+    })
+
+    User.create({
+        username: 'sanfatur30',
+        password: bcrypt.hashSync('123456', 8),
+        name: 'Muhammad Ichsan Fathurrochman',
+        email: 'nomail@gmail.com',
+        phone_number: 6283807164451,
+        join_date: new Date(),
+        role_code: "user"
+    })
+
+    User.create({
+        username: 'tsymd13',
+        password: bcrypt.hashSync('123456', 8),
+        name: 'Tasya Melati Dewi',
+        email: 'nomail@gmail.com',
+        phone_number: 6289609532748,
+        join_date: new Date(),
+        role_code: "user"
+    })
+
+}
+
+function insertMasterData() {
+    TransactionType.create({
+        code: "gaji",
+        type: "I",
+        name: "Gaji"
+    })
+
+    TransactionType.create({
+        code: "hutang",
+        type: "O",
+        name: "Hutang"
+    })
+
+    TransactionType.create({
+        code: "transportasi",
+        type: "O",
+        name: "Transportasi"
+    })
+
+    TransactionType.create({
+        code: "kopi",
+        type: "O",
+        name: "Kopi"
     })
 }
 

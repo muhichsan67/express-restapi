@@ -1,10 +1,9 @@
 module.exports = (sequelize, Sequelize) => {
     const TransactionType = sequelize.define("transaction_type", {
-        id: {
-            type: Sequelize.INTEGER,
-            primaryKey: true
+        trans_code: {
+            type: Sequelize.STRING,
         },
-        code: {
+        trans_type: {
             type: Sequelize.STRING,
         },
         name: {
