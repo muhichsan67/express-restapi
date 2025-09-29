@@ -9,17 +9,16 @@ var bcrypt = require("bcryptjs")
 const { user } = require('../models')
 var _template_return = {status: '', message: '', data: []}
 
-function isUserExist(username, email, phone_number, id) {
+function isUserExist(username, email, id) {
     var where_condition = [];
     if (username) where_condition.push({username: username})
     if (email) where_condition.push({email: email})
-    if (phone_number) where_condition.push({phone_number: phone_number})
     if (id) where_condition.push({id: id})
 
     return User.findOne({
         where: {
             [Op.or]: where_condition
-        }, attributes: ['id', 'username', 'password', 'name', 'email', 'phone_number',], include: ['role']
+        }, attributes: ['id', 'username', 'password', 'name', 'email'], include: ['role']
     }).then(user => {
         var result = {
             status: false,
@@ -30,10 +29,6 @@ function isUserExist(username, email, phone_number, id) {
             var msg = 'User already registered.'
             if (user.username == username) {
                 msg = 'Username already registered.'
-            } else if (user.email == email) {
-                msg = 'Email already registered.'
-            } else if (user.phone_number == phone_number) {
-                msg = 'Phone number already registered.'
             }
             result.status = true
             result.message = msg
@@ -46,7 +41,7 @@ function isUserExist(username, email, phone_number, id) {
 
 exports.signUp = (req,res) => {
     result = _template_return
-    isUserExist(req.body.username, req.body.email, req.body.phone_number).then(user => {
+    isUserExist(req.body.username, req.body.email).then(user => {
         if (user.status) {
             result.status = 'failed'
             result.message = user.message
@@ -57,8 +52,6 @@ exports.signUp = (req,res) => {
             username: req.body.username,
             email: req.body.email,
             name: req.body.name,
-            phone_number: req.body.phone_number,
-            join_date: new Date(),
             password: bcrypt.hashSync(req.body.password, 8)
         }).then(user => {
             if (req.body.role) {
@@ -122,7 +115,6 @@ exports.signIn = (req, res) => {
             username: user.username,
             name: user.name,
             email: user.email,
-            phone_number: user.phone_number,
             role: user.role.name,
             token: token,
             expiresInSeconds: config.expires_token

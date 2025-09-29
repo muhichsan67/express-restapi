@@ -17,9 +17,11 @@ db.Sequelize = Sequelize
 db.sequelize = sequelize
 
 db.role = require('./role.model.js')(sequelize, Sequelize)
-db.transactionType = require('./transaction_type.model.js')(sequelize, Sequelize)
+db.propertyType = require('./property_type.model.js')(sequelize, Sequelize)
 db.user = require('./user.model.js')(sequelize, Sequelize)
-db.transaction = require('./transaction.model.js')(sequelize, Sequelize)
+db.property = require('./property.model.js')(sequelize, Sequelize)
+db.propertyDetailType = require('./property_detail_type.model.js')(sequelize, Sequelize)
+db.propertyDetailImage = require('./property_detail_image.model.js')(sequelize, Sequelize)
 
 
 db.user.belongsTo(db.role, {
@@ -34,16 +36,26 @@ db.role.hasMany(db.user, {
 })
 
 
-// db.transaction.belongsTo(db.user, {
-//     foreignKey: 'user_id',
+// db.propertyDetailType.belongsTo(db.property, {
+//     foreignKey: 'property_id',
 //     targetKey: 'id',
-//     as: 'user'
+//     as: 'property_type'
 // })
-// db.user.hasMany(db.transaction, {
-//     foreignKey: 'id',
-//     targetKey: 'user_id',
-//     as: 'transactions'
-// })
+db.propertyDetailType.belongsTo(db.propertyType, {
+    foreignKey: 'property_type_id',
+    targetKey: 'id',
+    as: 'property_type'
+})
+db.property.hasMany(db.propertyDetailType, {
+    foreignKey: 'id',
+    targetKey: 'property_id',
+    as: 'types'
+})
+db.property.hasMany(db.propertyDetailImage, {
+    foreignKey: 'id',
+    targetKey: 'property_id',
+    as: 'images'
+})
 
 
 // db.transaction.belongsTo(db.transaction, {
@@ -57,5 +69,5 @@ db.role.hasMany(db.user, {
 //     as: 'transactions'
 // })
 
-db.ROLES = ['user', 'admin', 'moderator']
+db.ROLES = ['admin', 'user']
 module.exports = db

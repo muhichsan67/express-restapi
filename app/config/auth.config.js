@@ -1,4 +1,4 @@
 module.exports = {
-    secret: "ichsan-express-api-key",
+    secret: "cjfnc-property",
     expires_token: 86400
 }

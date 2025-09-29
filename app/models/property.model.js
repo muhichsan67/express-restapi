@@ -1,22 +1,18 @@
 module.exports = (sequelize, Sequelize) => {
-    const Transaction = sequelize.define("transactions", {
+    const Property = sequelize.define("properties", {
         id: {
             type: Sequelize.INTEGER,
             primaryKey: true,
             autoIncrement: true
         },
-        transaction_date: {
+        property_date: {
             type: Sequelize.DATEONLY,
         },
-        transaction_code: {
+        property_code: {
             type: Sequelize.STRING,
-            references: {
-                model: 'users',
-                key: 'name'
-            }
         },
-        type: {
-            type: Sequelize.STRING(1),
+        slug: {
+            type: Sequelize.STRING,
         },
         title: {
             type: Sequelize.STRING,
@@ -24,8 +20,14 @@ module.exports = (sequelize, Sequelize) => {
         description: {
             type: Sequelize.STRING,
         },
+        size: {
+            type: Sequelize.STRING,
+        },
         amount: {
             type: Sequelize.STRING,
+        },
+        cover: {
+            type: Sequelize.STRING
         },
         user_id: {
             type: Sequelize.INTEGER,
@@ -36,5 +38,5 @@ module.exports = (sequelize, Sequelize) => {
         },
     })
 
-    return Transaction
+    return Property
 }

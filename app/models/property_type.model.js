@@ -1,21 +1,18 @@
 module.exports = (sequelize, Sequelize) => {
-    const TransactionType = sequelize.define("transaction_type", {
+    const PropertyType = sequelize.define("property_type", {
         id: {
             type: Sequelize.INTEGER,
             primaryKey: true,
             autoIncrement: true
         },
-        trans_code: {
+        type: {
             type: Sequelize.STRING,
             unique: true
-        },
-        trans_type: {
-            type: Sequelize.STRING,
         },
         name: {
             type: Sequelize.STRING,
         },
     })
 
-    return TransactionType
+    return PropertyType
 }

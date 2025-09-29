@@ -22,19 +22,9 @@ module.exports = (sequelize, Sequelize) => {
         },
         name: {
             type: Sequelize.STRING,
-            references: {
-              model: 'transactions',
-              key: 'transaction_code'
-            }
         },
         email: {
             type: Sequelize.STRING,
-        },
-        phone_number: {
-            type: Sequelize.STRING,
-        },
-        join_date: {
-            type: Sequelize.DATE
         }
     })
 

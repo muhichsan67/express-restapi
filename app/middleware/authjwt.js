@@ -8,7 +8,7 @@ function isUserExist(id) {
     return User.findOne({
         where: {
             id: id
-        }, attributes: ['id', 'username', 'password', 'name', 'email', 'phone_number',], include: ['role']
+        }, attributes: ['id', 'username', 'password', 'name', 'email'], include: ['role']
     }).then(user => {
         var result = {
             status: false,
@@ -66,7 +66,6 @@ verifyToken = (req, res, next) => {
 isAdmin = (req, res, next) => {
     try {
         let userId = req.userId
-        console.log(userId)
         isUserExist(userId).then(result => {
             if (!result.data) {
                 result.status = 'failed'
@@ -74,7 +73,7 @@ isAdmin = (req, res, next) => {
                 return res.status(200).send(result)
             }
 
-            if (result.data.role.name !== 'admin') {
+            if (result.data.role.code !== 'admin') {
                 result.data = {}
                 result.status = 'failed'
                 result.message = 'Unauthorized permission!'

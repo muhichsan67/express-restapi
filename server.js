@@ -9,38 +9,11 @@ const express   = require('express')
 const cors      = require('cors')
 const app       = express()
 
-const swaggerUi = require('swagger-ui-express');
-const swaggerJsdoc = require('swagger-jsdoc');
-
-// Swagger setup
-const swaggerOptions = {
-    definition: {
-        openapi: '3.0.0',
-        info: {
-        title: 'My API',
-        version: '1.0.0',
-        description: 'A simple Express API with Swagger',
-        },
-        servers: [
-        {
-            url: global.baseUrl,
-        },
-        ],
-    },
-    apis: ['./app/routes/*.js'], // arahkan ke file yang berisi dokumentasi API-mu
-};
-
-
 
 var corsOptions = {
     origin: baseUrl
 }
 
-const swaggerSpec = swaggerJsdoc(swaggerOptions);
-console.log('SWAGGER ', swaggerSpec.paths);
-
-// Endpoint untuk Swagger UI
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 app.use(express.json())
 app.use(express.urlencoded({extended: true}))
@@ -49,22 +22,23 @@ app.use(cors(corsOptions))
 const db = require('./app/models')
 const Role = db.role
 const User = db.user
-const TransactionType = db.transactionType
+const Property = db.property
+const PropertyType = db.propertyType
 
 
 
 var bcrypt = require("bcryptjs")
 if (process.env.IS_RESYNC) {
-    db.sequelize.sync({force: true}).then(() => {
-        // console.log('Drop and Resync DB')
-        insertMasterData()
-        initial()
-    })
+    // db.sequelize.sync({force: true}).then(() => {
+    //     // console.log('Drop and Resync DB')
+    //     insertMasterData()
+    //     initial()
+    // })
 } else {
-    db.sequelize.sync({alter: true}).then(() => {
-        console.log('Drop and Resync DB')
-        insertMasterData()
-    })
+    // db.sequelize.sync({alter: true}).then(() => {
+    //     console.log('Drop and Resync DB')
+    //     insertMasterData()
+    // })
 }
 
 function initial() {
@@ -75,64 +49,33 @@ function initial() {
 
     Role.create({
         code: "user",
-        name: "Pengguna"
+        name: "User"
     })
 
     User.create({
-        username: 'admin123',
-        password: bcrypt.hashSync('123456', 8),
-        name: 'Admin 1',
-        email: 'admin1@gmail.com',
-        phone_number: 62831231999,
-        join_date: new Date(),
+        username: '999999',
+        password: bcrypt.hashSync('111111', 8),
+        name: 'Superadmin IT',
+        email: 'adminit@cj.net',
         role_code: "admin"
-    })
-
-    User.create({
-        username: 'sanfatur30',
-        password: bcrypt.hashSync('123456', 8),
-        name: 'Muhammad Ichsan Fathurrochman',
-        email: 'nomail@gmail.com',
-        phone_number: 6283807164451,
-        join_date: new Date(),
-        role_code: "user"
-    })
-
-    User.create({
-        username: 'tsymd13',
-        password: bcrypt.hashSync('123456', 8),
-        name: 'Tasya Melati Dewi',
-        email: 'nomail@gmail.com',
-        phone_number: 6289609532748,
-        join_date: new Date(),
-        role_code: "user"
     })
 
 }
 
 function insertMasterData() {
-    TransactionType.create({
-        code: "gaji",
-        type: "I",
-        name: "Gaji"
+    PropertyType.create({
+        type: "tanah",
+        name: "Tanah"
     })
 
-    TransactionType.create({
-        code: "hutang",
-        type: "O",
-        name: "Hutang"
+    PropertyType.create({
+        type: "ruko",
+        name: "Ruko"
     })
 
-    TransactionType.create({
-        code: "transportasi",
-        type: "O",
-        name: "Transportasi"
-    })
-
-    TransactionType.create({
-        code: "kopi",
-        type: "O",
-        name: "Kopi"
+    PropertyType.create({
+        type: "bangunan",
+        name: "Bangunan"
     })
 }
 
@@ -142,7 +85,8 @@ app.get("/", (req, res) => {
 
 // server.js
 const userRoutes = require('./app/routes/user.routes');
-app.use('/api/test', userRoutes); // Ini baru bisa jalan kalau pakai router
+const frontendRoutes = require('./app/routes/frontend.routes');
+app.use('/api/', frontendRoutes); // Ini baru bisa jalan kalau pakai router
 
 require('./app/routes/auth.routes')(app)
 require('./app/routes/upload.routes')(app)
